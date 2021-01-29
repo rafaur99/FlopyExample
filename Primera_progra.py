@@ -24,7 +24,7 @@ k = 1.0
 #el ejecutable de modflow; aparte se 
 #aparte se creo un espacio de trabajo.
 sim = flopy.mf6.MFSimulation(
-    sim_name=name, exe_name="D:\Semestre 2020-2\CURSO DE DIPLOMADO\mf6.2.0\bin" , version="mf6", 
+    sim_name=name, exe_name="D:/Semestre 2020-2/CURSO DE DIPLOMADO/mf6.2.0/bin/mf6" , version="mf6", 
         sim_ws="workspace"
 )   
 
@@ -61,7 +61,7 @@ ic = flopy.mf6.ModflowGwfic(gwf, pname="ic", strt=start)
 #control de flujo entre celdas
 npf = flopy.mf6.ModflowGwfnpf(gwf, icelltype=1, k=k, save_flows=True)
 
-# carga constante
+# carga constante y creacion de matriz con carga constrante
 chd_rec = []
 chd_rec.append(((0, int(N / 4), int(N / 4)), h2))
 for layer in range(0, Nlay):
@@ -77,3 +77,35 @@ chd = flopy.mf6.ModflowGwfchd(
     stress_period_data=chd_rec,
     save_flows=True,
 )
+
+# me organiza la matriz de variables
+iper = 0
+ra = chd.stress_period_data.get_data(key=iper)
+ra
+
+# Create the output control (`OC`) Package
+headfile = "{}.hds".format(name)
+head_filerecord = [headfile]
+budgetfile = "{}.cbb".format(name)
+budget_filerecord = [budgetfile]
+saverecord = [("HEAD", "ALL"), ("BUDGET", "ALL")]
+printrecord = [("HEAD", "LAST")]
+oc = flopy.mf6.ModflowGwfoc(
+    gwf,
+    saverecord=saverecord,
+    head_filerecord=head_filerecord,
+    budget_filerecord=budget_filerecord,
+    printrecord=printrecord,
+)
+
+#comienza la simulacion
+sim.write_simulation()
+
+#condicional de exito
+success, buff = sim.run_simulation()
+if not success:
+    raise Exception("MODFLOW 6 did not terminate normally.")
+    
+    
+
+
