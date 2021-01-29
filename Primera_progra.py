@@ -116,6 +116,23 @@ fig = plt.figure(figsize=(6, 6))
 ax = fig.add_subplot(1, 1, 1, aspect="equal")
 c = ax.contour(x, y, h[0], np.arange(90, 100.1, 0.2), colors="black")
 plt.clabel(c, fmt="%2.1f")
+
+#ploteado segunda capa
+x = y = np.linspace(0, L, N)
+y = y[::-1]
+fig = plt.figure(figsize=(6, 6))
+ax = fig.add_subplot(1, 1, 1, aspect="equal")
+c = ax.contour(x, y, h[-1], np.arange(90, 100.1, 0.2), colors="black")
+plt.clabel(c, fmt="%1.1f")
+
+#seccion transversal
+z = np.linspace(-H / Nlay / 2, -H + H / Nlay / 2, Nlay)
+fig = plt.figure(figsize=(5, 2.5))
+ax = fig.add_subplot(1, 1, 1, aspect="auto")
+c = ax.contour(x, z, h[:, 50, :], np.arange(90, 100.1, 0.2), colors="black")
+plt.clabel(c, fmt="%1.1f")
+
+
     
     
     
