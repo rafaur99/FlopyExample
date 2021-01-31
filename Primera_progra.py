@@ -59,6 +59,8 @@ start = h1 * np.ones((Nlay, N, N))
 ic = flopy.mf6.ModflowGwfic(gwf, pname="ic", strt=start)
 
 #control de flujo entre celdas
+k=np.ones([10,N,N])
+k[1,:,:]=4**-1
 npf = flopy.mf6.ModflowGwfnpf(gwf, icelltype=1, k=k, save_flows=True)
 
 # carga constante y creacion de matriz con carga constrante
