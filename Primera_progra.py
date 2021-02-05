@@ -81,6 +81,15 @@ chd = flopy.mf6.ModflowGwfchd(
     save_flows=True,
 )
 
+#condicionn de draneje en la primer capa 
+drn_datos = []
+for column in range(51):
+        drn_datos.append(((0, 51, column), 78.5+0.2*column, 0.3))
+drn= flopy.mf6.ModflowGwfdrn(gwf,
+                             stress_period_data=drn_datos
+)
+
+
 # me organiza la matriz de variables
 iper = 0
 ra = chd.stress_period_data.get_data(key=iper)
