@@ -59,6 +59,8 @@ start = h1 * np.ones((Nlay, N, N))
 ic = flopy.mf6.ModflowGwfic(gwf, pname="ic", strt=start)
 
 #control de flujo entre celdas
+k=np.ones([10,N,N])
+k[1,:,:]=4**-1
 npf = flopy.mf6.ModflowGwfnpf(gwf, icelltype=1, k=k, save_flows=True)
 
 # carga constante y creacion de matriz con carga constrante
@@ -78,6 +80,15 @@ chd = flopy.mf6.ModflowGwfchd(
     stress_period_data=chd_rec,
     save_flows=True,
 )
+
+#condicionn de draneje en la primer capa 
+drn_datos = []
+for column in range(51):
+        drn_datos.append(((0, 51, column), 78.5+0.2*column, 0.3))
+drn= flopy.mf6.ModflowGwfdrn(gwf,
+                             stress_period_data=drn_datos
+)
+
 
 # me organiza la matriz de variables
 iper = 0
@@ -123,7 +134,7 @@ x = y = np.linspace(0, L, N)
 y = y[::-1]
 fig = plt.figure(figsize=(6, 6))
 ax = fig.add_subplot(1, 1, 1, aspect="equal")
-c = ax.contour(x, y, h[-1], np.arange(90, 100.1, 0.2), colors="black")
+c = ax.contour(x, y, h[-5], np.arange(90, 100.1, 0.2), colors="black")
 plt.clabel(c, fmt="%1.1f")
 
 #seccion transversal
